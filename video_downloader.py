@@ -121,6 +121,7 @@ class App(tk.Tk):
 
         # yt-dlp warning
         if not self._ytdlp_bin:
+            wf = tk.Frame(main, bg="#2a1a00", pady=6)
             wf.pack(fill="x", pady=(0, 10))
             tk.Label(wf, text="⚠  yt-dlp não encontrado — rode: brew install yt-dlp ffmpeg",
                      font=SMALL, bg="#2a1a00", fg=WARNING, padx=12).pack(anchor="w")
