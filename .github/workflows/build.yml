@@ -20,15 +20,24 @@ jobs:
           name: VideoDownloader-Mac
           path: dist/VideoDownloader-Mac
 
-  build-windows:
+build-windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Download ffmpeg
+        run: |
+          curl -L https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip -o ffmpeg.zip
+          tar -xf ffmpeg.zip
+          copy ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe ffmpeg.exe
       - run: pip install pyinstaller
-      - run: pyinstaller --onefile --windowed --name "VideoDownloader-Windows" video_downloader.py
+      - run: pyinstaller --onefile --windowed --add-binary "ffmpeg.exe;." --name "VideoDownloader-Windows" video_downloader.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VideoDownloader-Windows
+          path: dist/VideoDownloader-Windows.exe
       - uses: actions/upload-artifact@v4
         with:
           name: VideoDownloader-Windows
