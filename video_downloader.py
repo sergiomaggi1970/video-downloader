@@ -167,7 +167,7 @@ class App(tk.Tk):
         cf = tk.Frame(opts, bg=BG)
         cf.pack(side="left")
         tk.Label(cf, text="Cookies (Instagram)", font=SMALL, bg=BG, fg=TEXT_DIM).pack(anchor="w")
-        self.cookies = tk.StringVar(value="safari")
+        self.cookies = tk.StringVar(value="nenhum")
         ttk.Combobox(cf, textvariable=self.cookies, state="readonly", font=UI, width=10,
                      values=["chrome","safari","firefox","edge","nenhum"]).pack(fill="x", pady=(4,0))
 
