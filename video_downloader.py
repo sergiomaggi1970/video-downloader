@@ -243,6 +243,11 @@ class App(tk.Tk):
                 if l.strip() and not l.strip().startswith("#")]
 
     def _ytdlp_args(self, url):
+        import sys, os
+        if getattr(sys, "frozen", False):
+            ffmpeg_path = os.path.join(sys._MEIPASS, "ffmpeg.exe")
+            if os.path.exists(ffmpeg_path):
+                os.environ["PATH"] = sys._MEIPASS + os.pathsep + os.environ.get("PATH", "")
         q   = self.quality.get()
         fmt = self.fmt.get()
         out = os.path.join(self.download_folder, "%(uploader)s - %(title).60s.%(ext)s")
