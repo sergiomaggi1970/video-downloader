@@ -253,8 +253,7 @@ class App(tk.Tk):
         out = os.path.join(self.download_folder, "%(uploader)s - %(title).60s.%(ext)s")
         browser = self.cookies.get()
         args = [self._ytdlp_bin, "--no-playlist", "-o", out]
-        args += ["--recode-video", "mp4"]
-        args += ["--postprocessor-args", "ffmpeg:-c:v libx264 -c:a aac -movflags +faststart"]
+        args += ["--remux-video", "mp4"]
         if browser != "nenhum":
             args += ["--cookies-from-browser", browser]
         if q == "Apenas áudio (mp3)":
