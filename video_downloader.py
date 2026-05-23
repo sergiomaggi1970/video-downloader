@@ -254,6 +254,7 @@ class App(tk.Tk):
         browser = self.cookies.get()
         args = [self._ytdlp_bin, "--no-playlist", "-o", out]
         args += ["--remux-video", "mp4"]
+        args += ["--postprocessor-args", "ffmpeg:-c:a aac"]
         if browser != "nenhum":
             args += ["--cookies-from-browser", browser]
         if q == "Apenas áudio (mp3)":
