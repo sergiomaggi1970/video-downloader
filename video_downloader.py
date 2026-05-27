@@ -254,7 +254,7 @@ class App(tk.Tk):
         browser = self.cookies.get()
         args = [self._ytdlp_bin, "--no-playlist", "-o", out]
         args += ["--merge-output-format", "mp4"]
-        args += ["--postprocessor-args", "ffmpeg:-c:v copy -c:a aac"]
+        args += ["--postprocessor-args", "ffmpeg:-c:v libx264 -c:a aac -preset fast"]
         if browser != "nenhum":
             args += ["--cookies-from-browser", browser]
         if q == "Apenas áudio (mp3)":
