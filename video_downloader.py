@@ -31,10 +31,10 @@ SMALL    = ("Helvetica Neue", 10)
 
 
 YTDLP_PATHS = [
-    "yt-dlp",
     os.path.expanduser("~/yt-dlp"),
-    "/opt/homebrew/bin/yt-dlp",
     "/usr/local/bin/yt-dlp",
+    "yt-dlp",
+    "/opt/homebrew/bin/yt-dlp",
 ]
 
 def find_ytdlp():
