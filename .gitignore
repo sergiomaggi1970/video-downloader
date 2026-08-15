@@ -1,0 +1,31 @@
+# Binários de build (não versionar — saem do PyInstaller)
+dist/
+build/
+*.spec.bak
+VideoDownloader-Windows.exe
+VideoDownloader-Mac
+
+# Dependências externas baixadas localmente
+yt-dlp
+yt-dlp.exe
+ffmpeg
+ffmpeg.exe
+ffmpeg.zip
+ffmpeg-master-latest-win64-gpl/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Segredos e configuração local
+.env
+*.local
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini

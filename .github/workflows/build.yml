@@ -19,6 +19,7 @@ jobs:
         with:
           name: VideoDownloader-Mac
           path: dist/VideoDownloader-Mac
+          retention-days: 3
 
   build-windows:
     runs-on: windows-latest
@@ -38,3 +39,4 @@ jobs:
         with:
           name: VideoDownloader-Windows
           path: dist/VideoDownloader-Windows.exe
+          retention-days: 3
