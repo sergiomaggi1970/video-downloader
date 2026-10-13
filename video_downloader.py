@@ -49,6 +49,10 @@ YTDLP_NIGHTLY_URL = {
 }
 DENO_BASE_URL = "https://github.com/denoland/deno/releases/latest/download/"
 
+Q_BEST = "Melhor (até 1080p, rápido)"
+Q_MAX = "Máxima (4K, mais lento)"
+Q_AUDIO = "Apenas áudio (mp3)"
+
 YT_RETRY_ARGS = [
     [],
     ["--extractor-args", "youtube:player_client=android"],
@@ -381,8 +385,10 @@ def clean_url(url):
 # ── Formato / erros ───────────────────────────────────────────────────────────
 def build_format(quality):
     """-f priorizando H.264 + AAC (evita recodificação). None para só áudio."""
-    if quality == "Apenas áudio (mp3)":
+    if quality == Q_AUDIO:
         return None
+    if quality == Q_MAX:
+        return "bv*+ba/b"   # sem restrição de codec; ffprobe converte depois se preciso
     m = re.match(r"(\d+)p", quality)
     h = f"[height<={m.group(1)}]" if m else ""
     return (f"bv*[vcodec^=avc1]{h}+ba[acodec^=mp4a]"
@@ -557,7 +563,7 @@ class Downloader:
 
     def _finish(self, path):
         """Verifica o arquivo final e só recodifica o necessário."""
-        if self.quality == "Apenas áudio (mp3)" or not path or not os.path.isfile(path):
+        if self.quality == Q_AUDIO or not path or not os.path.isfile(path):
             self.log("✓ Concluído", "ok")
             return
         ffprobe, ffmpeg = find_media_tool("ffprobe"), find_media_tool("ffmpeg")
@@ -580,7 +586,8 @@ class Downloader:
             self.log("Convertendo áudio para AAC", "info")
             opts = ["-c:v", "copy", "-c:a", "aac", "-b:a", "192k"]
         else:
-            self.log("Convertendo vídeo para H.264", "info")
+            self.log("Convertendo 4K para H.264, isso pode levar alguns minutos" if self.quality == Q_MAX
+                     else "Convertendo vídeo para H.264", "info")
             opts = ["-c:v", "libx264", "-preset", "fast", "-crf", "20", "-c:a", "aac",
                     "-movflags", "+faststart"]
         cmd = [ffmpeg, "-y", "-v", "error", "-i", path] + opts + [tmp]
@@ -714,16 +721,9 @@ class App(tk.Tk):
         qf = tk.Frame(opts, bg=BG)
         qf.pack(side="left", fill="x", expand=True, padx=(0, 12))
         tk.Label(qf, text="Qualidade", font=SMALL, bg=BG, fg=TEXT_DIM).pack(anchor="w")
-        self.quality = tk.StringVar(value="Melhor disponível")
+        self.quality = tk.StringVar(value=Q_BEST)
         ttk.Combobox(qf, textvariable=self.quality, state="readonly", font=UI, width=24,
-                     values=["Melhor disponível", "1080p", "720p", "480p", "Apenas áudio (mp3)"]).pack(fill="x", pady=(4, 0))
-
-        ff = tk.Frame(opts, bg=BG)
-        ff.pack(side="left", padx=(0, 12))
-        tk.Label(ff, text="Formato", font=SMALL, bg=BG, fg=TEXT_DIM).pack(anchor="w")
-        self.fmt = tk.StringVar(value="mp4")
-        ttk.Combobox(ff, textvariable=self.fmt, state="readonly", font=UI, width=8,
-                     values=["mp4", "mkv", "webm", "mov"]).pack(fill="x", pady=(4, 0))
+                     values=[Q_BEST, Q_MAX, "720p", "480p", Q_AUDIO]).pack(fill="x", pady=(4, 0))
 
         cf = tk.Frame(opts, bg=BG)
         cf.pack(side="left")
